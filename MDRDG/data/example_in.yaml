@@ -1,0 +1,11 @@
+simulation:
+  name:
+  ligand_dir:
+  protein_file:
+  lj_lambdas:
+  col_lambdas:
+  output:
+system_settings:
+  n_cpus:
+  memory:
+  time:

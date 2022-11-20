@@ -1,4 +1,10 @@
 r"""
+:mod:`mdrdg.journal` -- Manages Completed and Upcoming Tasks
+============================================================
+
+.. autoclass:: Journal
+    :members:
+    :inherited-members:
 
 """
 import glob
@@ -15,8 +21,11 @@ from .task import Task, encode_task, decode_task
 
 
 class Journal:
-    """
+    r"""Journal
 
+        The :class:`Journal` is responsible for creating task lists and recording completed tasks. This allows the
+        program to restart where it left off previously in case of any errors. This is managed by maintining a list
+        of the completed and slated tasks in each subdirectory of the simulation.
     """
     _config: Config
     _cur_step: int
@@ -27,7 +36,14 @@ class Journal:
     _pair_dirs: Dict[str, Path]
     _lambda_dirs: Dict[str, Path]
 
-    def __init__(self, config: Config, sim_dir: Path):
+    def __init__(self, config: Config, sim_dir: Path) -> None:
+        r"""
+
+        Parameters
+        ----------
+        config
+        sim_dir
+        """
         self._config = config
 
         with in_dir(sim_dir, create=True):
@@ -114,6 +130,18 @@ class Journal:
 
     @staticmethod
     def record(complete_task: Task) -> None:
+        r"""
+        Logs a task as complete.
+
+        Parameters
+        ----------
+        complete_task
+
+        Returns
+        -------
+        None
+
+        """
         task_file: str
 
         if complete_task.step < 2:

@@ -1,29 +1,35 @@
-"""Provide the primary functions."""
+r"""
+
+"""
+
+import time
+import os
+from pathlib import Path
+
+from typing import Dict
+
+import json
+
+import gromacs
+import yaml
+from gromacs.utilities import in_dir
+
+from MDRDG import Config
+from ._version import get_versions
 
 
-def canvas(with_attribution=True):
-    """
-    Placeholder function to show example docstring (NumPy format).
-
-    Replace this function and doc string for your own project.
-
-    Parameters
-    ----------
-    with_attribution : bool, Optional, default: True
-        Set whether or not to display who the quote is from.
-
-    Returns
-    -------
-    quote : str
-        Compiled string including quote and optional attribution.
-    """
-
-    quote = "The code is but a canvas to our imagination."
-    if with_attribution:
-        quote += "\n\t- Adapted from Henry David Thoreau"
-    return quote
+def save_metadata(config_path: Path) -> None:
+    metadata: Dict[str, str] = {'MDRDG version': f'{get_versions()}',
+                                'GROMACS version': f'{gromacs.get_versions()}',
+                                'start time': f'{time.localtime()}',
+                                'config': f'{yaml.safe_load(str(config_path))}'}
+    with open('_metadata.json', 'w') as file:
+        json.dump(metadata, file)
 
 
-if __name__ == "__main__":
-    # Do something if this file is invoked on its own
-    print(canvas())
+def start_sim_dir(sim_name: str) -> None:
+    try:
+        os.mkdir(sim_name)
+    except FileExistsError:
+        pass
+

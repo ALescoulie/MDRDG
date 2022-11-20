@@ -100,17 +100,33 @@ class Journal:
             self._create_task_file(task_file, [task1])
             return [task1]
 
-    def _get_step2_tasks(self) -> None:
+    def _get_step2_tasks(self) -> Optional[List[Task]]:
         pass
 
-    def _get_step3_tasks(self) -> None:
+    def _get_step3_tasks(self) -> Optional[List[Task]]:
         pass
 
-    def _get_step4_tasks(self) -> None:
+    def _get_step4_tasks(self) -> Optional[List[Task]]:
         pass
 
     def find_tasks(self) -> List[Task]:
         pass
 
-    def record(self, complete_task: Task) -> None:
-        pass
+    @staticmethod
+    def record(complete_task: Task) -> None:
+        task_file: str
+
+        if complete_task.step < 2:
+            task_file = os.path.abspath(
+                os.path.join(complete_task.directory,
+                             f'_tasks_step{complete_task.step}.json'))
+        else:
+            task_file = os.path.abspath(
+                os.path.join(complete_task.directory,
+                             '_tasks.json'))
+
+        with open(task_file, 'r') as file:
+            data = json.load(file)
+            task_dict: Dict[str, Any] = encode_task(complete_task)
+            data['completed'].append(task_dict)
+            data['todo'].remove(task_dict)

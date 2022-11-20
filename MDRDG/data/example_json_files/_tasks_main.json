@@ -1,8 +1,10 @@
 {
   "name": "example",
-  "input": "example.yaml",
+  "ligand_dir": "example",
+  "protein_top": "example.pdb",
   "cur_step": 1,
   "ligand_pairs": [],
   "col_lambdas": [],
-  "vdw_lambdas": []
+  "lj_lambdas": [],
+  "done": false
 }

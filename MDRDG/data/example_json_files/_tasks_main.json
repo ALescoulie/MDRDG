@@ -1,0 +1,8 @@
+{
+  "name": "example",
+  "input": "example.yaml",
+  "cur_step": 1,
+  "ligand_pairs": [],
+  "col_lambdas": [],
+  "vdw_lambdas": []
+}

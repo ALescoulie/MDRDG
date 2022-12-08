@@ -81,12 +81,11 @@ def run_task(task: Task) -> None:
 
 
 class TaskQueue:
-    _tasks: Set[Task]
+    _tasks: Set[Task] = set()
     _batch_list = List[List[Task]]
 
     def __init__(self, tasks: List[Task]) -> None:
-        self._tasks = set(tasks)
-        self._batch_sort()
+        self.enqueue(tasks)
 
     def _batch_sort(self) -> None:
         batch_dict: Dict[Tuple[int, int], List[Task]] = defaultdict(list)
@@ -94,15 +93,13 @@ class TaskQueue:
         for task in self._tasks:
             batch_dict[(task.operation.value, task.op_step.value)].append(task)
 
-        batch_keys: List[Tuple[int, int]] = list(batch_dict.keys())
-        self._batch_list = [batch_dict[k] for k in sorted(batch_keys, key=lambda x: (x[0], x[1]))]
+        self._batch_list = [batch_dict[k] for k in sorted(batch_dict.keys(), key=lambda x: (x[0], x[1]))]
 
     def pop(self) -> Optional[List[Task]]:
-        if len(self._batch_list) == 0:
+        try:
+            return self._batch_list.pop(0)
+        except IndexError:
             return None
-        else:
-            batch: List[Task] = self._batch_list.pop(0)
-            return batch
 
     def enqueue(self, batch: List[Task]) -> None:
         self._tasks += batch

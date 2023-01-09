@@ -84,37 +84,36 @@ class Journal:
             data = json.load(file)
             if data['done']:
                 return None
-            else:
-                return [decode_task(t) for t in data['todo']]
+            return [decode_task(t) for t in data['todo']]
 
     def _get_step0_tasks(self) -> Optional[List[Task]]:
         task_file = os.path.join(f'{self._sim_name}', '_tasks_step0.json')
         if os.path.exists(task_file):
             return self._parse_task_file(task_file)
-        else:
-            ligands = glob.glob(str(self._config.simulation.ligand_dir))
-            tasks: List[Task] = []
-            for file in ligands:
-                tasks.append(Task(0,
-                                  task.Operations.conversion,
-                                  task.ConversionSteps.convert,
-                                  [Path(os.path.abspath(file))],
-                                  Path(self._config.simulation.ligand_dir)))
-            self._create_task_file(task_file, tasks)
-            return tasks
+
+        ligands = glob.glob(str(self._config.simulation.ligand_dir))
+        tasks: List[Task] = [ 
+            Task(0, 
+                task.Operations.conversion, 
+                task.ConversionSteps.convert,
+                [Path(os.path.abspath(file))], 
+                Path(self._config.simulation.ligand_dir)) 
+            for file in ligands ]
+
+        self._create_task_file(task_file, tasks)
+        return tasks
 
     def _get_step1_tasks(self) -> Optional[List[Task]]:
         task_file = os.path.join(f'{self._sim_name}', '_tasks_step1.json')
         if os.path.exists(task_file):
             return self._parse_task_file(task_file)
-        else:
-            task1: Task = Task(1,
-                               task.Operations.mapping,
-                               task.MappingSteps.map_ligands,
-                               [Path(os.path.join(self._sim_name, 'ligands'))],
-                               Path(self._sim_name))
-            self._create_task_file(task_file, [task1])
-            return [task1]
+        task1: Task = Task(1,
+                           task.Operations.mapping,
+                           task.MappingSteps.map_ligands,
+                           [Path(os.path.join(self._sim_name, 'ligands'))],
+                           Path(self._sim_name))
+        self._create_task_file(task_file, [task1])
+        return [task1]
 
     def _get_step2_tasks(self) -> Optional[List[Task]]:
         pass

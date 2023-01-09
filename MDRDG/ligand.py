@@ -22,9 +22,8 @@ class LigandMol2(NamedTuple):
 
 
 def collect_ligands(directory: DirectoryPath) -> List[Ligand]:
-    lig_files = glob.glob(str(directory))
     ligands: List[Ligand] = []
-    for i, f in enumerate(lig_files):
+    for i, f in enumerate(glob.glob(str(directory)))
         f_path: Path = Path(str(f))
         ligands.append(Ligand(f_path.stem, f_path))
     return ligands
